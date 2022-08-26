@@ -31,13 +31,21 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+
+    # Django Applications
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # My Applications
+    'accounts.apps.AccountsConfig'
 ]
+
+AUTH_USER_MODEL = 'accounts.CustomUserModel'
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
