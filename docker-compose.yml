@@ -1,0 +1,31 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfiles/nestjs.Dockerfile
+    container_name: backend
+    restart: always
+    depends_on:
+      - database
+    env_file:
+      - envs/.env.dev
+    ports:
+      - '3000:3000'
+    volumes:
+      - .:/app/myBlog
+      - node_modules:/app/myBlog/node_modules
+
+  database:
+    image: postgres:17.0-alpine3.20
+    container_name: database
+    restart: always
+    env_file:
+      - envs/.env.dev
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  pgdata:
+  node_modules:
