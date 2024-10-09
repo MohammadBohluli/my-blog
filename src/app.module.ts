@@ -7,7 +7,7 @@ import config from '../config/config';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: 'envs/.env.dev',
+      envFilePath: '.env',
       isGlobal: true,
       expandVariables: true,
       load: [config],
