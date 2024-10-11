@@ -14,14 +14,16 @@ enum Role {
 
 // TODO: isActive must be change to false
 model Users {
-  id        Int      @id() @default(autoincrement())
-  email     String   @unique
-  name      String
-  isActive  Boolean  @default(true)
+  id        Int        @id() @default(autoincrement())
+  email     String     @unique
+  username  String     @unique
+  name      String?
+  isActive  Boolean    @default(true)
   password  String
-  role      Role     @default(USER)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  role      Role       @default(USER)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  articles  Articles[]
 }
 
 enum Status {
@@ -36,4 +38,6 @@ model Articles {
   status    Status   @default(DRAFT)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  author    Users    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  Int
 }
