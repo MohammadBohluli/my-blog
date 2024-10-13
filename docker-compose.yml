@@ -2,7 +2,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: Dockerfiles/nestjs.Dockerfile
+      dockerfile: Dockerfile
     container_name: backend
     restart: always
     depends_on:
@@ -12,9 +12,9 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - .:/app/myBlog
-      - node_modules:/app/myBlog/node_modules
-
+      - .:/app/my-blog
+      - /app/my-blog/node_modules
+    
   database:
     image: postgres:17.0-alpine3.20
     container_name: database
@@ -28,4 +28,4 @@ services:
 
 volumes:
   pgdata:
-  node_modules:
+  
