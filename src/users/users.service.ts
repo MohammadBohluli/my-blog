@@ -12,4 +12,12 @@ export class UsersService {
       data: { email, username, password, name },
     });
   }
+
+  findByUsername(username: string) {
+    return this.prisma.users.findUnique({ where: { username } });
+  }
+
+  findByEmail(email: string) {
+    return this.prisma.users.findUnique({ where: { email } });
+  }
 }
