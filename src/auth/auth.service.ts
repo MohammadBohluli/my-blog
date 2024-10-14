@@ -3,18 +3,20 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dtos/login.dto';
 import { AuthJwtPayload } from './types/jwt-payload.type';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly JwtService: JwtService,
+    private readonly configService: ConfigService,
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
@@ -53,5 +55,15 @@ export class AuthService {
     // TODO: change login to generate jwt
     const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
     return this.JwtService.sign(payload);
+  }
+
+  generateRefreshToken(user: any) {
+    const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
+    const options: JwtSignOptions = {
+      secret: this.configService.getOrThrow('refreshSecret'),
+      expiresIn: this.configService.getOrThrow('refreshExpiresIn'),
+    };
+
+    return this.JwtService.sign(payload, options);
   }
 }

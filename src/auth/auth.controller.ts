@@ -24,7 +24,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   login(@Request() req) {
-    const token = this.authService.login(req.user);
-    return { token, userId: req.user.userId };
+    const accessToken = this.authService.login(req.user);
+    return { accessToken, userId: req.user.userId };
   }
 }

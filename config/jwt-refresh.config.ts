@@ -1,6 +1,6 @@
 const jwtRefreshConfig = () => ({
-  secret: process.env.REFRESH_JWT_SECRET,
-  expiresIn: process.env.REFRESH_JWT_EXPIRE_IN,
+  refreshSecret: process.env.REFRESH_JWT_SECRET,
+  refreshExpiresIn: process.env.REFRESH_JWT_EXPIRE_IN,
 });
 
 export default jwtRefreshConfig;
