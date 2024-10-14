@@ -51,8 +51,7 @@ export class AuthService {
     return { userId: user.id, role: user.role };
   }
 
-  login(user: any) {
-    // TODO: change login to generate jwt
+  generateAccessToken(user: any) {
     const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
     return this.JwtService.sign(payload);
   }
