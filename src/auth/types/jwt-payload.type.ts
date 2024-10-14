@@ -1,6 +1,6 @@
 import { Role } from '@prisma/client';
 
 export type AuthJwtPayload = {
-  sub: number;
+  userId: number;
   role: Role;
 };

@@ -3,11 +3,11 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import * as argon2 from 'argon2';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dtos/login.dto';
-import * as argon2 from 'argon2';
-import { JwtService } from '@nestjs/jwt';
 import { AuthJwtPayload } from './types/jwt-payload.type';
 
 @Injectable()
@@ -51,7 +51,7 @@ export class AuthService {
 
   login(user: any) {
     // TODO: change login to generate jwt
-    const payload: AuthJwtPayload = { sub: user.id, role: user.role };
+    const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
     return this.JwtService.sign(payload);
   }
 }
