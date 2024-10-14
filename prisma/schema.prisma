@@ -19,7 +19,7 @@ model Users {
   username     String     @unique
   name         String?
   isActive     Boolean    @default(true)
-  resreshToken String?
+  refreshToken String?
   password     String
   role         Role       @default(USER)
   createdAt    DateTime   @default(now())

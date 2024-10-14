@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import * as argon2 from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
-import * as argon2 from 'argon2';
 
 @Injectable()
 export class UsersService {
@@ -29,5 +29,14 @@ export class UsersService {
 
   findById(userId: number) {
     return this.prisma.users.findUnique({ where: { id: userId } });
+  }
+
+  updateHashRefreshToken(userId: number, hashToken: string) {
+    const user = this.prisma.users.update({
+      where: { id: userId },
+      data: { refreshToken: hashToken },
+    });
+
+    return user;
   }
 }
