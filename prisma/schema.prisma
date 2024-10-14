@@ -14,16 +14,17 @@ enum Role {
 
 // TODO: isActive must be change to false
 model Users {
-  id        Int        @id() @default(autoincrement())
-  email     String     @unique
-  username  String     @unique
-  name      String?
-  isActive  Boolean    @default(true)
-  password  String
-  role      Role       @default(USER)
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  articles  Articles[]
+  id           Int        @id() @default(autoincrement())
+  email        String     @unique
+  username     String     @unique
+  name         String?
+  isActive     Boolean    @default(true)
+  resreshToken String?
+  password     String
+  role         Role       @default(USER)
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  articles     Articles[]
 }
 
 enum Status {
