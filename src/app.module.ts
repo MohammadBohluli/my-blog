@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import appConfig from 'config/app.config';
+import jwtConfig from 'config/jwt.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { ConfigModule } from '@nestjs/config';
-import { PrismaModule } from './prisma/prisma.module';
 import { ArticlesModule } from './articles/articles.module';
 import { AuthModule } from './auth/auth.module';
+import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
-import config from '../config/config';
-import jwtConfig from 'config/jwt.config';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import jwtConfig from 'config/jwt.config';
       envFilePath: '.env',
       isGlobal: true,
       expandVariables: true,
-      load: [config, jwtConfig],
+      load: [appConfig, jwtConfig],
     }),
     PrismaModule,
     ArticlesModule,
