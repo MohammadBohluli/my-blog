@@ -7,7 +7,7 @@ import { ArticlesModule } from './articles/articles.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import config from '../config/config';
-
+import jwtConfig from 'config/jwt.config';
 
 @Module({
   imports: [
@@ -15,7 +15,7 @@ import config from '../config/config';
       envFilePath: '.env',
       isGlobal: true,
       expandVariables: true,
-      load: [config],
+      load: [config, jwtConfig],
     }),
     PrismaModule,
     ArticlesModule,
