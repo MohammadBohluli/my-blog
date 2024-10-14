@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { AuthService } from './auth.service';
-import { AuthGuard } from '@nestjs/passport';
+import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -20,10 +20,11 @@ export class AuthController {
     return this.authService.signup(body);
   }
 
-  @UseGuards(AuthGuard('local'))
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
   login(@Request() req) {
-    return req.user;
+    const token = this.authService.login(req.user);
+    return { token, userId: req.user.userId };
   }
 }
