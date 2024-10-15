@@ -12,6 +12,7 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
+import { UserJwt } from './types/user-jwt.type';
 
 @Controller('auth')
 export class AuthController {
@@ -25,7 +26,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  async login(@CurrentUser() user) {
+  async login(@CurrentUser() user: UserJwt) {
     const { accessToken, refreshToken } = await this.authService.login(user);
 
     return { accessToken, refreshToken, userId: user.userId };
@@ -33,14 +34,14 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Post('signout')
-  async signout(@CurrentUser() user) {
+  async signout(@CurrentUser() user: UserJwt) {
     await this.authService.signout(user.userId);
     return { message: 'you are sign out successfuly' };
   }
 
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
-  async refreshToken(@CurrentUser() user) {
+  async refreshToken(@CurrentUser() user: UserJwt) {
     const { accessToken, refreshToken } =
       await this.authService.refreshToken(user);
 
