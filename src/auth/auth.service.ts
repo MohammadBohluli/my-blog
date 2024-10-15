@@ -16,7 +16,7 @@ import { AuthJwtPayload } from './types/jwt-payload.type';
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly JwtService: JwtService,
+    private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -105,8 +105,8 @@ export class AuthService {
     };
 
     const [accessToken, refreshToken] = await Promise.all([
-      this.JwtService.signAsync(payload),
-      this.JwtService.signAsync(payload, optionsRefreshToken),
+      this.jwtService.signAsync(payload),
+      this.jwtService.signAsync(payload, optionsRefreshToken),
     ]);
 
     return { accessToken, refreshToken };
