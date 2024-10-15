@@ -24,12 +24,12 @@ export class AuthController {
   }
 
   @UseGuards(LocalAuthGuard)
-  @Post('login')
+  @Post('signin')
   @HttpCode(HttpStatus.OK)
   async login(@User() user: CurrentUser) {
     const { accessToken, refreshToken } = await this.authService.signin(user);
 
-    return { accessToken, refreshToken, userId: user.userId };
+    return { accessToken, refreshToken };
   }
 
   @UseGuards(JwtAuthGuard)

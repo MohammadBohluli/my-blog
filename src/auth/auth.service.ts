@@ -8,7 +8,7 @@ import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
-import { LoginDto } from './dtos/login.dto';
+import { SigninDto } from './dtos/signin.dto';
 import { CurrentUser } from './types/current-user.type';
 import { AuthJwtPayload } from './types/jwt-payload.type';
 
@@ -43,45 +43,8 @@ export class AuthService {
     await this.usersService.updateHashRefreshToken(userId, null);
   }
 
-  async validateUser(loginDto: LoginDto) {
-    const { email, password } = loginDto;
-
-    const user = await this.usersService.findByEmail(email);
-    if (!user) throw new UnauthorizedException('user not found');
-
-    const isValidPassword = await argon2.verify(user.password, password);
-    if (!isValidPassword)
-      throw new UnauthorizedException('invalid credentials');
-
-    return { userId: user.id, role: user.role };
-  }
-
-  generateAccessToken(user: CurrentUser) {
-    const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
-    return this.JwtService.signAsync(payload);
-  }
-
-  generateRefreshToken(user: CurrentUser) {
-    const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
-    const options: JwtSignOptions = {
-      secret: this.configService.getOrThrow('refreshSecret'),
-      expiresIn: this.configService.getOrThrow('refreshExpiresIn'),
-    };
-
-    return this.JwtService.signAsync(payload, options);
-  }
-
   async signin(user: CurrentUser) {
-    const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
-    const options: JwtSignOptions = {
-      secret: this.configService.getOrThrow('refreshSecret'),
-      expiresIn: this.configService.getOrThrow('refreshExpiresIn'),
-    };
-
-    const [accessToken, refreshToken] = await Promise.all([
-      this.JwtService.signAsync(payload),
-      this.JwtService.signAsync(payload, options),
-    ]);
+    const { accessToken, refreshToken } = await this.generateTokens(user);
 
     const hashRefreshToken = await argon2.hash(refreshToken);
     await this.usersService.updateHashRefreshToken(
@@ -93,16 +56,7 @@ export class AuthService {
   }
 
   async refreshToken(user: CurrentUser) {
-    const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
-    const options: JwtSignOptions = {
-      secret: this.configService.getOrThrow('refreshSecret'),
-      expiresIn: this.configService.getOrThrow('refreshExpiresIn'),
-    };
-
-    const [accessToken, refreshToken] = await Promise.all([
-      this.JwtService.signAsync(payload),
-      this.JwtService.signAsync(payload, options),
-    ]);
+    const { accessToken, refreshToken } = await this.generateTokens(user);
 
     const hashRefreshToken = await argon2.hash(refreshToken);
     await this.usersService.updateHashRefreshToken(
@@ -111,6 +65,19 @@ export class AuthService {
     );
 
     return { accessToken, refreshToken };
+  }
+
+  async validateUser(signinDto: SigninDto) {
+    const { email, password } = signinDto;
+
+    const user = await this.usersService.findByEmail(email);
+    if (!user) throw new UnauthorizedException('user not found');
+
+    const isValidPassword = await argon2.verify(user.password, password);
+    if (!isValidPassword)
+      throw new UnauthorizedException('invalid credentials');
+
+    return { userId: user.id, role: user.role };
   }
 
   async validateRefreshToken(userId: number, refreshToken: string) {
@@ -127,5 +94,21 @@ export class AuthService {
       throw new UnauthorizedException('invalid refresh token');
 
     return { userId: user.id, role: user.role };
+  }
+
+  async generateTokens(user: CurrentUser) {
+    const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
+
+    const optionsRefreshToken: JwtSignOptions = {
+      secret: this.configService.getOrThrow('refreshSecret'),
+      expiresIn: this.configService.getOrThrow('refreshExpiresIn'),
+    };
+
+    const [accessToken, refreshToken] = await Promise.all([
+      this.JwtService.signAsync(payload),
+      this.JwtService.signAsync(payload, optionsRefreshToken),
+    ]);
+
+    return { accessToken, refreshToken };
   }
 }
