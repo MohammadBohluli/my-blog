@@ -5,7 +5,6 @@ import {
   HttpStatus,
   Post,
   UseGuards,
-  UseInterceptors,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { AuthService } from './auth.service';
@@ -14,13 +13,11 @@ import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { CurrentUser } from './types/current-user.type';
-import { SerializeInterceptor } from 'common/serialize.interceptor';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @UseInterceptors(SerializeInterceptor)
   @Post('signup')
   signup(@Body() body: CreateUserDto) {
     return this.authService.signup(body);
