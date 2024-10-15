@@ -5,13 +5,14 @@ import {
   HttpStatus,
   Post,
   Req,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { AuthService } from './auth.service';
+import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
+import { Users } from '@prisma/client';
 
 @Controller('auth')
 export class AuthController {
@@ -25,17 +26,28 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  login(@Request() req) {
-    const accessToken = this.authService.generateAccessToken(req.user);
-    const refreshToken = this.authService.generateRefreshToken(req.user);
+  async login(@Req() req) {
+    const { accessToken, refreshToken } = await this.authService.login(
+      req.user,
+    );
 
     return { accessToken, refreshToken, userId: req.user.userId };
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('signout')
+  async signout(@Req() req) {
+    await this.authService.signout(req.user.userId);
+    return { message: 'you are sign out successfuly' };
+  }
+
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
-  refreshToken(@Req() req) {
-    const accessToken = this.authService.generateAccessToken(req.user);
-    return { accessToken };
+  async refreshToken(@Req() req) {
+    const { accessToken, refreshToken } = await this.authService.refreshToken(
+      req.user,
+    );
+
+    return { accessToken, refreshToken };
   }
 }
