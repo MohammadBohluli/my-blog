@@ -27,7 +27,7 @@ export class AuthController {
   @Post('login')
   @HttpCode(HttpStatus.OK)
   async login(@User() user: CurrentUser) {
-    const { accessToken, refreshToken } = await this.authService.login(user);
+    const { accessToken, refreshToken } = await this.authService.signin(user);
 
     return { accessToken, refreshToken, userId: user.userId };
   }

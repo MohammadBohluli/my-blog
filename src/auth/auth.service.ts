@@ -9,6 +9,7 @@ import * as argon2 from 'argon2';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { LoginDto } from './dtos/login.dto';
+import { CurrentUser } from './types/current-user.type';
 import { AuthJwtPayload } from './types/jwt-payload.type';
 
 @Injectable()
@@ -55,12 +56,12 @@ export class AuthService {
     return { userId: user.id, role: user.role };
   }
 
-  generateAccessToken(user: any) {
+  generateAccessToken(user: CurrentUser) {
     const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
     return this.JwtService.signAsync(payload);
   }
 
-  generateRefreshToken(user: any) {
+  generateRefreshToken(user: CurrentUser) {
     const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
     const options: JwtSignOptions = {
       secret: this.configService.getOrThrow('refreshSecret'),
@@ -70,7 +71,7 @@ export class AuthService {
     return this.JwtService.signAsync(payload, options);
   }
 
-  async login(user: any) {
+  async signin(user: CurrentUser) {
     const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
     const options: JwtSignOptions = {
       secret: this.configService.getOrThrow('refreshSecret'),
@@ -91,7 +92,7 @@ export class AuthService {
     return { accessToken, refreshToken };
   }
 
-  async refreshToken(user: any) {
+  async refreshToken(user: CurrentUser) {
     const payload: AuthJwtPayload = { userId: user.userId, role: user.role };
     const options: JwtSignOptions = {
       secret: this.configService.getOrThrow('refreshSecret'),
