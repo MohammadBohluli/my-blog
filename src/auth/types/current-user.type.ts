@@ -1,3 +1,3 @@
 import { AuthJwtPayload } from './jwt-payload.type';
 
-export type UserJwt = AuthJwtPayload;
+export type CurrentUser = AuthJwtPayload;
