@@ -4,16 +4,18 @@ import {
   Injectable,
   NestInterceptor,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import { CustomResponse } from 'src/types/custom-response.type';
+import { RESPONSE_MESSAGE_METADATA } from '../decorators/response-message.decorator';
 
 @Injectable()
 export class ResponseInterceptor<T>
   implements NestInterceptor<T, CustomResponse<T>>
 {
+  constructor(private reflector: Reflector) {}
   intercept(
     ctx: ExecutionContext,
     next: CallHandler,
@@ -28,7 +30,17 @@ export class ResponseInterceptor<T>
     const res = ctx.switchToHttp().getResponse<Response>();
     const statusCode = res.statusCode;
     const timestamp = new Date();
+    const message =
+      this.reflector.get<string>(RESPONSE_MESSAGE_METADATA, ctx.getHandler()) ||
+      'successfully';
 
-    return { status: true, path: req.url, statusCode, data, timestamp };
+    return {
+      status: true,
+      path: req.url,
+      statusCode,
+      message,
+      data,
+      timestamp,
+    };
   }
 }
