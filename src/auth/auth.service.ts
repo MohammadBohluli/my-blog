@@ -20,22 +20,7 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {}
 
-  async signup(createUserDto: CreateUserDto) {
-    const { username, email } = createUserDto;
-
-    const [userByUsername, userByEmail] = await Promise.all([
-      this.usersService.findByUsername(username),
-      this.usersService.findByEmail(email),
-    ]);
-
-    if (userByUsername) {
-      throw new ConflictException('username already used');
-    }
-
-    if (userByEmail) {
-      throw new ConflictException('email already used');
-    }
-
+  signup(createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }
 
