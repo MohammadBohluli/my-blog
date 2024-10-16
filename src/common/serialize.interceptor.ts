@@ -5,7 +5,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { plainToInstance } from 'class-transformer';
-import { map } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 type ClassConstructor = { new (...args: any[]): {} };
 

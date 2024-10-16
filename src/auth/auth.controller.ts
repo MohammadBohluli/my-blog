@@ -21,8 +21,9 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  signup(@Body() body: CreateUserDto) {
-    return this.authService.signup(body);
+  async signup(@Body() body: CreateUserDto) {
+    await this.authService.signup(body);
+    // return this.authService.signup(body);
   }
 
   @UseGuards(LocalAuthGuard)
