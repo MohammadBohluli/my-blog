@@ -1,3 +1,3 @@
 import { AuthJwtPayload } from './jwt-payload.type';
 
-export type CurrentUser = AuthJwtPayload;
+export interface CurrentUser extends AuthJwtPayload {}
