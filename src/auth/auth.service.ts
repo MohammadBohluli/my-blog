@@ -22,8 +22,11 @@ export class AuthService {
     private readonly mailService: MailService,
   ) {}
 
-  signup(createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  async signup(createUserDto: CreateUserDto) {
+    const user = await this.usersService.create(createUserDto);
+    setImmediate(async () => {
+      await this.mailService.sendUserConfirmation(user, 'my token');
+    });
   }
 
   async signout(userId: number) {

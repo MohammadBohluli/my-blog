@@ -11,6 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
   const PORT = configService.get<number>('appPort');
+
   const { httpAdapter } = app.get(HttpAdapterHost);
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));

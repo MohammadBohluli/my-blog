@@ -10,15 +10,7 @@ import { ConfigService } from '@nestjs/config';
       useFactory: async (
         configService: ConfigService,
       ): Promise<MailerOptions> => ({
-        transport: {
-          host: configService.get<string>('mailHost'),
-          port: configService.get<number>('mailPort'),
-          secure: configService.get<boolean>('mailSecure'),
-          auth: {
-            user: configService.get<string>('mailUser'),
-            pass: configService.get<string>('mailPassword'),
-          },
-        },
+        transport: configService.get<string>('mailTransport'),
       }),
     }),
   ],

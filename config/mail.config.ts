@@ -5,6 +5,7 @@ const mailConfig = () => ({
   mailUser: process.env.MAIL_USER,
   mailPassword: process.env.MAIL_PASSWORD,
   mailFrom: process.env.MAIL_FROM,
+  mailTransport: process.env.MAIL_TRASNPORT,
 });
 
 export default mailConfig;
