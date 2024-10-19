@@ -11,6 +11,7 @@ import { UsersService } from 'src/users/users.service';
 import { SigninDto } from './dtos/signin.dto';
 import { CurrentUser } from './types/current-user.type';
 import { AuthJwtPayload } from './types/jwt-payload.type';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +19,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly mailService: MailService,
   ) {}
 
   signup(createUserDto: CreateUserDto) {
