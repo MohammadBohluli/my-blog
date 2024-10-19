@@ -30,7 +30,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   @HttpCode(HttpStatus.OK)
-  async login(@User() user: CurrentUser) {
+  async signin(@User() user: CurrentUser) {
     const { accessToken, refreshToken } = await this.authService.signin(user);
 
     return { accessToken, refreshToken };
