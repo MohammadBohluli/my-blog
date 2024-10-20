@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
@@ -60,10 +60,14 @@ export class UsersService {
     return user;
   }
 
-  findAccountVerificationCode(verificationCode: string) {
-    return this.prisma.accountVerification.findFirst({
+  async findAccountVerificationCode(verificationCode: string) {
+    const token = await this.prisma.accountVerification.findFirst({
       where: { verificationCode },
       select: { verificationCode: true, expiresAt: true },
     });
+
+    if (!token) throw new UnauthorizedException('invalid token');
+
+    return token;
   }
 }

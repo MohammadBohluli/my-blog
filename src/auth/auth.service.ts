@@ -18,7 +18,7 @@ export class AuthService {
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
-    const user = await this.usersService.create(createUserDto);
+    await this.usersService.create(createUserDto);
   }
 
   async signout(userId: number) {
