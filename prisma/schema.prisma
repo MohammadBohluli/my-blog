@@ -60,7 +60,9 @@ model AccountVerification {
   id               Int       @id() @default(autoincrement())
   verificationCode String?
   expiresAt        DateTime?
-  isVerified       Boolean   @default(false)
+  isVerifiedEmail  Boolean   @default(false)
   user             User      @relation(fields: [usersId], references: [id])
   usersId          Int       @unique
+
+  @@map("account_verification")
 }
