@@ -3,6 +3,7 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -51,4 +52,7 @@ export class AuthController {
 
     return { accessToken, refreshToken };
   }
+
+  @Post('verify-account/:verificationCode')
+  verifyAccount(@Param('verificationCode') verificationCode: string) {}
 }
