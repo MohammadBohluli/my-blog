@@ -59,4 +59,11 @@ export class UsersService {
 
     return user;
   }
+
+  findAccountVerificationCode(verificationCode: string) {
+    return this.prisma.accountVerification.findFirst({
+      where: { verificationCode },
+      select: { verificationCode: true, expiresAt: true },
+    });
+  }
 }
