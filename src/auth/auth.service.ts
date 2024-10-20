@@ -20,6 +20,7 @@ export class AuthService {
 
   async signup(createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
+
     setImmediate(async () => {
       await this.mailService.sendUserConfirmation(user, 'my token');
     });
