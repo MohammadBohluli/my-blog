@@ -32,7 +32,7 @@ model User {
   createdAt           DateTime             @default(now())
   updatedAt           DateTime             @updatedAt
   articles            Article[]
-  AccountVerification AccountVerification?
+  accountVerification AccountVerification?
 
   @@map("users")
 }

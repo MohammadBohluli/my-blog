@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { generateExpireTime, generateRandomCode } from 'src/common/utils';
 
 @Injectable()
 export class UsersService {
@@ -10,6 +11,8 @@ export class UsersService {
   async create(createUserDto: CreateUserDto) {
     const { email, username, name, password } = createUserDto;
 
+    const expiresAt = generateExpireTime();
+    const verificationCode = generateRandomCode();
     const hashPassword = await argon2.hash(password);
 
     const user = await this.prisma.user.create({
