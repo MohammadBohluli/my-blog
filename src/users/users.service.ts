@@ -3,10 +3,14 @@ import * as argon2 from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { generateExpireTime, generateRandomCode } from 'src/common/utils';
+import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mailService: MailService,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     const { email, username, name, password } = createUserDto;
@@ -15,8 +19,21 @@ export class UsersService {
     const verificationCode = generateRandomCode();
     const hashPassword = await argon2.hash(password);
 
+    setImmediate(async () => {
+      await this.mailService.sendUserConfirmation(
+        createUserDto,
+        verificationCode,
+      );
+    });
+
     const user = await this.prisma.user.create({
-      data: { email, username, password: hashPassword, name },
+      data: {
+        email,
+        username,
+        password: hashPassword,
+        name,
+        accountVerification: { create: { verificationCode, expiresAt } },
+      },
     });
 
     return user;

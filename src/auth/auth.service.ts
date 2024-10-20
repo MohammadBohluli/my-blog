@@ -15,15 +15,10 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-    private readonly mailService: MailService,
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
     const user = await this.usersService.create(createUserDto);
-
-    setImmediate(async () => {
-      await this.mailService.sendUserConfirmation(user, 'my token');
-    });
   }
 
   async signout(userId: number) {
