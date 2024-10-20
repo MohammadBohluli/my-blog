@@ -12,33 +12,54 @@ enum Role {
   USER
 }
 
-// TODO: isActive must be change to false
-model Users {
-  id           Int        @id() @default(autoincrement())
-  email        String     @unique
-  username     String     @unique
-  name         String?
-  isActive     Boolean    @default(true)
-  refreshToken String?
-  password     String
-  role         Role       @default(USER)
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-  articles     Articles[]
-}
-
 enum Status {
   DRAFT
   PUBLISHED
 }
 
-model Articles {
+/////////////////////////////////////
+///// Users table
+/////////////////////////////////////
+model User {
+  id                  Int                  @id() @default(autoincrement())
+  email               String               @unique
+  username            String               @unique
+  name                String?
+  isActive            Boolean              @default(false)
+  refreshToken        String?
+  password            String
+  role                Role                 @default(USER)
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  articles            Article[]
+  AccountVerification AccountVerification?
+
+  @@map("users")
+}
+
+/////////////////////////////////////
+///// Articles table
+/////////////////////////////////////
+model Article {
   id        Int      @id() @default(autoincrement())
   title     String
   body      String
   status    Status   @default(DRAFT)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  author    Users    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int
+
+  @@map("articles")
+}
+
+/////////////////////////////////////
+///// AccountVerification table
+/////////////////////////////////////
+model AccountVerification {
+  id               Int       @id() @default(autoincrement())
+  verificationCode String?
+  expiresAt        DateTime?
+  user             User      @relation(fields: [usersId], references: [id])
+  usersId          Int       @unique
 }
