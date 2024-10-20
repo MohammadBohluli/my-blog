@@ -1,17 +1,13 @@
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
+import { MailService } from 'src/mail/mail.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { SigninDto } from './dtos/signin.dto';
 import { CurrentUser } from './types/current-user.type';
 import { AuthJwtPayload } from './types/jwt-payload.type';
-import { MailService } from 'src/mail/mail.service';
 
 @Injectable()
 export class AuthService {

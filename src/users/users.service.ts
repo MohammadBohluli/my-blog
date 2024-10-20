@@ -12,7 +12,7 @@ export class UsersService {
 
     const hashPassword = await argon2.hash(password);
 
-    const user = await this.prisma.users.create({
+    const user = await this.prisma.user.create({
       data: { email, username, password: hashPassword, name },
     });
 
@@ -20,19 +20,19 @@ export class UsersService {
   }
 
   findByUsername(username: string) {
-    return this.prisma.users.findUnique({ where: { username } });
+    return this.prisma.user.findUnique({ where: { username } });
   }
 
   findByEmail(email: string) {
-    return this.prisma.users.findUnique({ where: { email } });
+    return this.prisma.user.findUnique({ where: { email } });
   }
 
   findById(userId: number) {
-    return this.prisma.users.findUnique({ where: { id: userId } });
+    return this.prisma.user.findUnique({ where: { id: userId } });
   }
 
   updateHashRefreshToken(userId: number, hashToken: string) {
-    const user = this.prisma.users.update({
+    const user = this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: hashToken },
     });
