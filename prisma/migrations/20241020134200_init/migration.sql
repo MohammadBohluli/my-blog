@@ -1,18 +1,8 @@
-/*
-  Warnings:
+-- CreateEnum
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');
 
-  - You are about to drop the `Articles` table. If the table is not empty, all the data it contains will be lost.
-  - You are about to drop the `Users` table. If the table is not empty, all the data it contains will be lost.
-
-*/
--- DropForeignKey
-ALTER TABLE "Articles" DROP CONSTRAINT "Articles_authorId_fkey";
-
--- DropTable
-DROP TABLE "Articles";
-
--- DropTable
-DROP TABLE "Users";
+-- CreateEnum
+CREATE TYPE "Status" AS ENUM ('DRAFT', 'PUBLISHED');
 
 -- CreateTable
 CREATE TABLE "users" (
