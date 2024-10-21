@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
+import { MailModule } from 'src/mail/mail.module';
+import { ResetPasswordModule } from 'src/reset-password/reset-password.module';
 import { UsersModule } from 'src/users/users.module';
 import { VerificationModule } from 'src/verification/verification.module';
 import { AuthController } from './auth.controller';
@@ -8,10 +10,10 @@ import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { RefreshJwtStrategy } from './strategies/refresh.strategy';
-import { MailModule } from 'src/mail/mail.module';
 
 @Module({
   imports: [
+    ResetPasswordModule,
     MailModule,
     VerificationModule,
     UsersModule,

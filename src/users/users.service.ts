@@ -4,7 +4,7 @@ import { generateExpireTime, generateRandomCode } from 'src/common/utils';
 import { MailService } from 'src/mail/mail.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { ResetPasswordDto } from 'src/auth/dtos/reset-password.dto';
+import { ResetPasswordDto } from 'src/reset-password/dtos/reset-password.dto';
 
 @Injectable()
 export class UsersService {
@@ -63,6 +63,15 @@ export class UsersService {
     await this.prisma.user.update({
       where: { id: userId },
       data: { isActive: true, isVerifiedEmail: true },
+    });
+  }
+
+  async updatePassword(userId: number, newPassword: string) {
+    const hashNewPassword = await argon2.hash(newPassword);
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { password: hashNewPassword },
     });
   }
 

@@ -1,16 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import appConfig from 'config/app.config';
-import jwtConfig from 'config/jwt.config';
-
 import jwtRefreshConfig from 'config/jwt-refresh.config';
+import jwtConfig from 'config/jwt.config';
+import mailConfig from 'config/mail.config';
 import { ArticlesModule } from './articles/articles.module';
 import { AuthModule } from './auth/auth.module';
-import { PrismaModule } from './prisma/prisma.module';
-import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { ResetPasswordModule } from './reset-password/reset-password.module';
+import { UsersModule } from './users/users.module';
 import { VerificationModule } from './verification/verification.module';
-import mailConfig from 'config/mail.config';
 
 @Module({
   imports: [
@@ -26,6 +26,7 @@ import mailConfig from 'config/mail.config';
     UsersModule,
     MailModule,
     VerificationModule,
+    ResetPasswordModule,
   ],
 })
 export class AppModule {}

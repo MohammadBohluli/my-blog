@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ForbiddenException,
   Injectable,
   NotFoundException,
@@ -14,9 +15,11 @@ import {
   isExpiredTime,
 } from 'src/common/utils';
 import { MailService } from 'src/mail/mail.service';
+import { ResetPasswordService } from 'src/reset-password/reset-password.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { VerificationService } from 'src/verification/verification.service';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { SigninDto } from './dtos/signin.dto';
 import { CurrentUser } from './types/current-user.type';
@@ -30,6 +33,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     private readonly verificationService: VerificationService,
     private readonly mailService: MailService,
+    private readonly resetPasswordService: ResetPasswordService,
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
@@ -158,4 +162,46 @@ export class AuthService {
 
     await this.sendResetPasswordCode(user);
   }
+
+  async resetPassword(
+    userId: number,
+    resetToken: string,
+    changePasswordDto: ChangePasswordDto,
+  ) {
+    const { newPassword } = changePasswordDto;
+
+    const { resetToken: token, expiresAt } =
+      await this.resetPasswordService.findByUserId(userId);
+
+    if (token != resetToken || !isExpiredTime(expiresAt)) {
+      await this.resetPasswordService.updateByUserId(userId, {
+        resetToken: null,
+        expiresAt: null,
+      });
+      throw new BadRequestException('invalid token');
+    } else {
+      await this.usersService.updatePassword(userId, newPassword);
+      // TODO: null refresh token
+      await this.resetPasswordService.updateByUserId(userId, {
+        resetToken: null,
+        expiresAt: null,
+      });
+    }
+  }
 }
+// async verifyAccount(userId: number, verificationCode: string) {
+
+//   if (code != verificationCode || !isExpiredTime(expiresAt)) {
+//     await this.verificationService.updateByUserId(userId, {
+//       verificationCode: null,
+//       expiresAt: null,
+//     });
+//     throw new UnauthorizedException('invalid verification code');
+//   } else {
+//     await this.usersService.activeAccount(userId);
+//     await this.verificationService.updateByUserId(userId, {
+//       verificationCode: null,
+//       expiresAt: null,
+//     });
+//   }
+// }
