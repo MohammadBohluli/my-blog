@@ -2,9 +2,10 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
-import { MailService } from 'src/mail/mail.service';
+import { isExpiredTime } from 'src/common/utils';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
+import { VerificationService } from 'src/verification/verification.service';
 import { SigninDto } from './dtos/signin.dto';
 import { CurrentUser } from './types/current-user.type';
 import { AuthJwtPayload } from './types/jwt-payload.type';
@@ -15,6 +16,7 @@ export class AuthService {
     private readonly usersService: UsersService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    private readonly verificationService: VerificationService,
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
@@ -55,6 +57,13 @@ export class AuthService {
     const user = await this.usersService.findByEmail(email);
     if (!user) throw new UnauthorizedException('user not found');
 
+    if (!user.isActive) {
+      await this.verificationService.sendVerificationCode(user);
+      throw new UnauthorizedException(
+        'your account not active, activation code send to email',
+      );
+    }
+
     const isValidPassword = await argon2.verify(user.password, password);
     if (!isValidPassword)
       throw new UnauthorizedException('invalid credentials');
@@ -92,5 +101,24 @@ export class AuthService {
     ]);
 
     return { accessToken, refreshToken };
+  }
+
+  async verifyAccount(userId: number, verificationCode: string) {
+    const { verificationCode: code, expiresAt } =
+      await this.verificationService.findByUserId(userId);
+
+    if (code != verificationCode || !isExpiredTime(expiresAt)) {
+      await this.verificationService.updateByUserId(userId, {
+        verificationCode: null,
+        expiresAt: null,
+      });
+      throw new UnauthorizedException('invalid verification code');
+    } else {
+      await this.usersService.activeAccount(userId);
+      await this.verificationService.updateByUserId(userId, {
+        verificationCode: null,
+        expiresAt: null,
+      });
+    }
   }
 }

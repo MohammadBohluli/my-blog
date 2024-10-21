@@ -11,6 +11,7 @@ CREATE TABLE "users" (
     "username" TEXT NOT NULL,
     "name" TEXT,
     "isActive" BOOLEAN NOT NULL DEFAULT false,
+    "isVerifiedEmail" BOOLEAN NOT NULL DEFAULT false,
     "refreshToken" TEXT,
     "password" TEXT NOT NULL,
     "role" "Role" NOT NULL DEFAULT 'USER',
@@ -34,13 +35,13 @@ CREATE TABLE "articles" (
 );
 
 -- CreateTable
-CREATE TABLE "AccountVerification" (
+CREATE TABLE "account_verification" (
     "id" SERIAL NOT NULL,
     "verificationCode" TEXT,
     "expiresAt" TIMESTAMP(3),
-    "usersId" INTEGER NOT NULL,
+    "userId" INTEGER NOT NULL,
 
-    CONSTRAINT "AccountVerification_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "account_verification_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
@@ -50,10 +51,10 @@ CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "AccountVerification_usersId_key" ON "AccountVerification"("usersId");
+CREATE UNIQUE INDEX "account_verification_userId_key" ON "account_verification"("userId");
 
 -- AddForeignKey
 ALTER TABLE "articles" ADD CONSTRAINT "articles_authorId_fkey" FOREIGN KEY ("authorId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "AccountVerification" ADD CONSTRAINT "AccountVerification_usersId_fkey" FOREIGN KEY ("usersId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "account_verification" ADD CONSTRAINT "account_verification_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

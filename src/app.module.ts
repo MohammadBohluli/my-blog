@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
 import { MailModule } from './mail/mail.module';
+import { VerificationModule } from './verification/verification.module';
 import mailConfig from 'config/mail.config';
 
 @Module({
@@ -24,6 +25,7 @@ import mailConfig from 'config/mail.config';
     AuthModule,
     UsersModule,
     MailModule,
+    VerificationModule,
   ],
 })
 export class AppModule {}

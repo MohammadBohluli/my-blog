@@ -4,6 +4,7 @@ import {
   HttpCode,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   UseGuards,
 } from '@nestjs/common';
@@ -53,6 +54,12 @@ export class AuthController {
     return { accessToken, refreshToken };
   }
 
-  @Post('verify-account/:verificationCode')
-  verifyAccount(@Param('verificationCode') verificationCode: string) {}
+  @ResponsMessage('your account successfully verified')
+  @Post('verify-account/:userId/:verificationCode')
+  async verifyAccount(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('verificationCode') verificationCode: string,
+  ) {
+    await this.authService.verifyAccount(userId, verificationCode);
+  }
 }

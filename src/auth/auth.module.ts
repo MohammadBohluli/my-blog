@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { UsersModule } from 'src/users/users.module';
+import { VerificationModule } from 'src/verification/verification.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -10,6 +11,7 @@ import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 
 @Module({
   imports: [
+    VerificationModule,
     UsersModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
