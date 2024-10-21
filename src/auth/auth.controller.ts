@@ -17,6 +17,7 @@ import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { CurrentUser } from './types/current-user.type';
+import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -40,6 +41,7 @@ export class AuthController {
 
   @ResponsMessage('sign out successfully')
   @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Post('signout')
   async signout(@User() user: CurrentUser) {
     this.authService.signout(user.userId);
@@ -56,10 +58,21 @@ export class AuthController {
 
   @ResponsMessage('your account successfully verified')
   @Post('verify-account/:userId/:verificationCode')
+  @HttpCode(HttpStatus.OK)
   async verifyAccount(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('verificationCode') verificationCode: string,
   ) {
     await this.authService.verifyAccount(userId, verificationCode);
   }
+
+  @ResponsMessage('reset password link send to email')
+  @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
+  async forgotPassword(@Body() body: ForgotPasswordDto) {
+    await this.authService.forgotPassword(body);
+  }
+
+  @Post('reset-password')
+  resetPassword() {}
 }

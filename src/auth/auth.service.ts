@@ -1,11 +1,23 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
+import { User } from '@prisma/client';
 import * as argon2 from 'argon2';
-import { isExpiredTime } from 'src/common/utils';
+import {
+  generateExpireTime,
+  generateRandomCode,
+  isExpiredTime,
+} from 'src/common/utils';
+import { MailService } from 'src/mail/mail.service';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { UsersService } from 'src/users/users.service';
 import { VerificationService } from 'src/verification/verification.service';
+import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { SigninDto } from './dtos/signin.dto';
 import { CurrentUser } from './types/current-user.type';
 import { AuthJwtPayload } from './types/jwt-payload.type';
@@ -17,6 +29,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
     private readonly verificationService: VerificationService,
+    private readonly mailService: MailService,
   ) {}
 
   async signup(createUserDto: CreateUserDto) {
@@ -120,5 +133,29 @@ export class AuthService {
         expiresAt: null,
       });
     }
+  }
+
+  async sendResetPasswordCode(user: User) {
+    const resetToken = generateRandomCode();
+    const expiresAt = generateExpireTime(1);
+
+    this.mailService.sendResetPasswordCode(user, resetToken);
+    await this.usersService.updateResetPassword(user.id, {
+      resetToken,
+      expiresAt,
+    });
+  }
+
+  async forgotPassword(forgotPasswordDto: ForgotPasswordDto) {
+    const { email } = forgotPasswordDto;
+
+    const user = await this.usersService.findByEmail(email);
+    if (!user)
+      throw new NotFoundException('user with this email was not found');
+
+    if (!user.isActive || !user.isVerifiedEmail)
+      throw new ForbiddenException('your account not verified');
+
+    await this.sendResetPasswordCode(user);
   }
 }

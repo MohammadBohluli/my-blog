@@ -17,9 +17,6 @@ enum Status {
   PUBLISHED
 }
 
-/////////////////////////////////////
-///// Users table
-/////////////////////////////////////
 model User {
   id                  Int                  @id() @default(autoincrement())
   email               String               @unique
@@ -34,13 +31,11 @@ model User {
   updatedAt           DateTime             @updatedAt
   articles            Article[]
   accountVerification AccountVerification?
+  resetPassword       ResetPassword?
 
   @@map("users")
 }
 
-/////////////////////////////////////
-///// Articles table
-/////////////////////////////////////
 model Article {
   id        Int      @id() @default(autoincrement())
   title     String
@@ -54,9 +49,6 @@ model Article {
   @@map("articles")
 }
 
-/////////////////////////////////////
-///// AccountVerification table
-/////////////////////////////////////
 model AccountVerification {
   id               Int       @id() @default(autoincrement())
   verificationCode String?
@@ -65,4 +57,14 @@ model AccountVerification {
   userId           Int       @unique
 
   @@map("account_verification")
+}
+
+model ResetPassword {
+  id         Int       @id() @default(autoincrement())
+  resetToken String?
+  expiresAt  DateTime?
+  user       User      @relation(fields: [userId], references: [id])
+  userId     Int       @unique
+
+  @@map("reset_password")
 }

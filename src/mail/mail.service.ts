@@ -15,4 +15,14 @@ export class MailService {
       text,
     });
   }
+
+  async sendResetPasswordCode(user: User, resetToken: string) {
+    const text = `Verification code: http://localhost:3000/auth/reset-password/${user.id}/${resetToken}`;
+
+    await this.mailService.sendMail({
+      to: user.email,
+      subject: `reset password link`,
+      text,
+    });
+  }
 }
