@@ -18,6 +18,8 @@ import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { CurrentUser } from './types/current-user.type';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
+import { ResetPasswordDto } from './dtos/reset-password.dto';
+import { ChangePasswordDto } from './dtos/change-password.dto';
 
 @ApiTags('auth')
 @Controller('auth')
@@ -73,6 +75,11 @@ export class AuthController {
     await this.authService.forgotPassword(body);
   }
 
-  @Post('reset-password')
-  resetPassword() {}
+  @Post('reset-password/:userId/:resetToken')
+  @HttpCode(HttpStatus.OK)
+  resetPassword(
+    @Param('userId', ParseIntPipe) userId: number,
+    @Param('resetToken') resetToken: string,
+    @Body() body: ChangePasswordDto,
+  ) {}
 }
