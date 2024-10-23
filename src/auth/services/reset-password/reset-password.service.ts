@@ -85,7 +85,8 @@ export class ResetPasswordService {
       throw new BadRequestException('invalid token');
     } else {
       await this.userService.updatePassword(userId, newPassword);
-      // TODO: null refresh token
+      await this.userService.updateHashRefreshToken(userId, null);
+
       await this.updateByUserId(userId, {
         resetToken: null,
         expiresAt: null,

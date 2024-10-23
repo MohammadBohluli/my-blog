@@ -75,11 +75,11 @@ export class AuthService {
     if (!user || !user.refreshToken)
       throw new UnauthorizedException('invalid refresh token');
 
+    // check if refresh token is repetitive
     const isValidRefreshToken = await argon2.verify(
       user.refreshToken,
       refreshToken,
     );
-
     if (!isValidRefreshToken)
       throw new UnauthorizedException('invalid refresh token');
 
