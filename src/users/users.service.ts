@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
 import { ResetPasswordDto } from 'src/auth/dtos/reset-password.dto';
 import { generateExpireTime, generateRandomCode } from 'src/common/utils';
 import { MailService } from 'src/mail/mail.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -84,6 +85,20 @@ export class UsersService {
     await this.prisma.resetPassword.update({
       where: { userId },
       data: { expiresAt, resetToken },
+    });
+  }
+
+  async update(userId: number, updateUserDto: UpdateUserDto) {
+    const { username, name } = updateUserDto;
+
+    if ('username' in updateUserDto) {
+      const user = await this.findByUsername(username);
+      if (user) throw new ConflictException(`the ${username} already exists`);
+    }
+
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: { name, username },
     });
   }
 }
