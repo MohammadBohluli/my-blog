@@ -90,4 +90,15 @@ export class AuthController {
   ) {
     await this.resetPasswordService.resetPassword(userId, resetToken, body);
   }
+
+  @ResponsMessage('your password successfully changed')
+  @UseGuards(JwtAuthGuard)
+  @Post('change-password')
+  @HttpCode(HttpStatus.OK)
+  async changePassword(
+    @Body() body: ChangePasswordDto,
+    @User() user: CurrentUser,
+  ) {
+    await this.resetPasswordService.changePassword(user.userId, body);
+  }
 }

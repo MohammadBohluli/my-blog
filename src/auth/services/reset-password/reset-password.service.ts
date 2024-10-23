@@ -84,13 +84,19 @@ export class ResetPasswordService {
       });
       throw new BadRequestException('invalid token');
     } else {
-      await this.userService.updatePassword(userId, newPassword);
-      await this.userService.updateHashRefreshToken(userId, null);
+      await this.changePassword(userId, { newPassword });
 
       await this.updateByUserId(userId, {
         resetToken: null,
         expiresAt: null,
       });
     }
+  }
+
+  async changePassword(userId: number, changePasswordDto: ChangePasswordDto) {
+    const { newPassword } = changePasswordDto;
+
+    await this.userService.updatePassword(userId, newPassword);
+    await this.userService.updateHashRefreshToken(userId, null);
   }
 }
