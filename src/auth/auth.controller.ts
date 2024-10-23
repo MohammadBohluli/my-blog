@@ -11,20 +11,25 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { ResponsMessage } from 'src/common/decorators/response-message.decorator';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
-import { AuthService } from './auth.service';
 import { User } from './decorators/current-user.decorator';
+import { ChangePasswordDto } from './dtos/change-password.dto';
+import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
+import { AuthService } from './services/authentication/auth.service';
+import { ResetPasswordService } from './services/reset-password/reset-password.service';
+import { VerificationService } from './services/verification/verification.service';
 import { CurrentUser } from './types/current-user.type';
-import { ForgotPasswordDto } from './dtos/forgot-password.dto';
-import { ResetPasswordDto } from '../reset-password/dtos/reset-password.dto';
-import { ChangePasswordDto } from './dtos/change-password.dto';
 
 @ApiTags('auth')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private readonly authService: AuthService,
+    private readonly resetPasswordService: ResetPasswordService,
+    private readonly verificationdService: VerificationService,
+  ) {}
 
   @ResponsMessage('user created successfully')
   @Post('signup')
@@ -65,14 +70,14 @@ export class AuthController {
     @Param('userId', ParseIntPipe) userId: number,
     @Param('verificationCode') verificationCode: string,
   ) {
-    await this.authService.verifyAccount(userId, verificationCode);
+    await this.verificationdService.verifyAccount(userId, verificationCode);
   }
 
   @ResponsMessage('reset password link send to email')
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
   async forgotPassword(@Body() body: ForgotPasswordDto) {
-    await this.authService.forgotPassword(body);
+    await this.resetPasswordService.forgotPassword(body);
   }
 
   @ResponsMessage('your password successfully changed')
@@ -83,6 +88,6 @@ export class AuthController {
     @Param('resetToken') resetToken: string,
     @Body() body: ChangePasswordDto,
   ) {
-    await this.authService.resetPassword(userId, resetToken, body);
+    await this.resetPasswordService.resetPassword(userId, resetToken, body);
   }
 }

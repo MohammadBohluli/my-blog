@@ -2,20 +2,20 @@ import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { MailModule } from 'src/mail/mail.module';
-import { ResetPasswordModule } from 'src/reset-password/reset-password.module';
+import { PrismaModule } from 'src/prisma/prisma.module';
 import { UsersModule } from 'src/users/users.module';
-import { VerificationModule } from 'src/verification/verification.module';
 import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthService } from './services/authentication/auth.service';
+import { ResetPasswordService } from './services/reset-password/reset-password.service';
+import { VerificationService } from './services/verification/verification.service';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { RefreshJwtStrategy } from './strategies/refresh.strategy';
 
 @Module({
   imports: [
-    ResetPasswordModule,
+    PrismaModule,
     MailModule,
-    VerificationModule,
     UsersModule,
     JwtModule.registerAsync({
       inject: [ConfigService],
@@ -28,6 +28,13 @@ import { RefreshJwtStrategy } from './strategies/refresh.strategy';
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshJwtStrategy],
+  providers: [
+    ResetPasswordService,
+    VerificationService,
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    RefreshJwtStrategy,
+  ],
 })
 export class AuthModule {}

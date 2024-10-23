@@ -8,9 +8,7 @@ import { ArticlesModule } from './articles/articles.module';
 import { AuthModule } from './auth/auth.module';
 import { MailModule } from './mail/mail.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { ResetPasswordModule } from './reset-password/reset-password.module';
 import { UsersModule } from './users/users.module';
-import { VerificationModule } from './verification/verification.module';
 
 @Module({
   imports: [
@@ -25,8 +23,6 @@ import { VerificationModule } from './verification/verification.module';
     AuthModule,
     UsersModule,
     MailModule,
-    VerificationModule,
-    ResetPasswordModule,
   ],
 })
 export class AppModule {}

@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import * as argon2 from 'argon2';
+import { ResetPasswordDto } from 'src/auth/dtos/reset-password.dto';
 import { generateExpireTime, generateRandomCode } from 'src/common/utils';
 import { MailService } from 'src/mail/mail.service';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserDto } from './dtos/create-user.dto';
-import { ResetPasswordDto } from 'src/reset-password/dtos/reset-password.dto';
 
 @Injectable()
 export class UsersService {

@@ -1,14 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { User } from '@prisma/client';
-import { generateExpireTime, generateRandomCode } from 'src/common/utils';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { AccountVerificationDto } from './dtos/account-verification.dto';
+import { AccountVerificationDto } from 'src/auth/dtos/account-verification.dto';
+import {
+  generateExpireTime,
+  generateRandomCode,
+  isExpiredTime,
+} from 'src/common/utils';
 import { MailService } from 'src/mail/mail.service';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class VerificationService {
   constructor(
     private readonly prisma: PrismaService,
+    private readonly userService: UsersService,
     private readonly mailService: MailService,
   ) {}
 
@@ -38,6 +48,25 @@ export class VerificationService {
     });
 
     if (!account) throw new NotFoundException('not found user account');
+  }
+
+  async verifyAccount(userId: number, verificationCode: string) {
+    const { verificationCode: code, expiresAt } =
+      await this.findByUserId(userId);
+
+    if (code != verificationCode || !isExpiredTime(expiresAt)) {
+      await this.updateByUserId(userId, {
+        verificationCode: null,
+        expiresAt: null,
+      });
+      throw new UnauthorizedException('invalid verification code');
+    } else {
+      await this.userService.activeAccount(userId);
+      await this.updateByUserId(userId, {
+        verificationCode: null,
+        expiresAt: null,
+      });
+    }
   }
 
   async sendVerificationCode(user: User) {
