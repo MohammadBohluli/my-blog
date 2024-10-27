@@ -8,8 +8,7 @@ import { CustomResponse } from './common/dtos/custom-response.dto';
 import { PrismaClientExceptionFilter } from './common/exceptions/prisma-client-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
-// just for show document
-class Response<T> extends CustomResponse<T> {}
+class Response<T> extends CustomResponse<T> {} // just for display document
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
