@@ -65,12 +65,12 @@ export const ApiSignOutSwagger = () => {
   return applyDecorators(
     ApiBearerAuth(),
     ApiOperation({
-      summary: '',
-      description: '',
+      summary: 'User Sign Out',
+      description: `The user has successfully signed out of their account. Note: If you're using Swagger UI, 
+        please log out using the 'Authorize' button`,
     }),
     ApiOkResponse({
-      type: '',
-      description: '',
+      description: 'User signed out successfully.',
     }),
   );
 };

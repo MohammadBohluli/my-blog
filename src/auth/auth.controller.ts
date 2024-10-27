@@ -12,7 +12,11 @@ import { ApiTags } from '@nestjs/swagger';
 import { ResponsMessage } from 'src/common/decorators/response-message.decorator';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { User } from './decorators/current-user.decorator';
-import { ApiSignInSwagger, ApiSignUpSwagger } from './documents/auth.swagger';
+import {
+  ApiSignInSwagger,
+  ApiSignOutSwagger,
+  ApiSignUpSwagger,
+} from './documents/auth.swagger';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
@@ -51,7 +55,8 @@ export class AuthController {
     return { accessToken, refreshToken };
   }
 
-  @ResponsMessage('sign out successfully')
+  @ApiSignOutSwagger()
+  @ResponsMessage('user signed out successfully.')
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Post('signout')
