@@ -12,6 +12,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ResponsMessage } from 'src/common/decorators/response-message.decorator';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { User } from './decorators/current-user.decorator';
+import { ApiSignInSwagger, ApiSignUpSwagger } from './documents/auth.swagger';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
@@ -31,12 +32,16 @@ export class AuthController {
     private readonly verificationdService: VerificationService,
   ) {}
 
-  @ResponsMessage('user created successfully')
+  @ApiSignUpSwagger()
+  @ResponsMessage(
+    'user created successfully, verification email will be sent to the registered email address',
+  )
   @Post('signup')
   async signup(@Body() body: CreateUserDto) {
     await this.authService.signup(body);
   }
 
+  @ApiSignInSwagger()
   @UseGuards(LocalAuthGuard)
   @Post('signin')
   @HttpCode(HttpStatus.OK)

@@ -47,7 +47,7 @@ export class CreateUserDto {
   @MaxLength(30)
   name: string;
 
-  @ApiProperty({ required: true, type: String, minLength: 3, maxLength: 12 })
+  @ApiProperty({ required: true, type: String, minLength: 8, maxLength: 12 })
   @IsString()
   @MinLength(8)
   @MaxLength(12)
