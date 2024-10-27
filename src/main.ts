@@ -10,7 +10,7 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
-  const PORT = configService.get<number>('appPort');
+  const PORT = configService.get<number>('appPort') || 3000;
 
   const { httpAdapter } = app.get(HttpAdapterHost);
 

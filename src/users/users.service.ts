@@ -51,7 +51,7 @@ export class UsersService {
     return this.prisma.user.findUnique({ where: { id: userId } });
   }
 
-  async updateHashRefreshToken(userId: number, hashToken: string) {
+  async updateHashRefreshToken(userId: number, hashToken: string | null) {
     const refreshToken = await this.prisma.user.update({
       where: { id: userId },
       data: { refreshToken: hashToken },

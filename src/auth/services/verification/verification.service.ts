@@ -54,7 +54,10 @@ export class VerificationService {
     const { verificationCode: code, expiresAt } =
       await this.findByUserId(userId);
 
-    if (code != verificationCode || !isExpiredTime(expiresAt)) {
+    if (
+      code != verificationCode ||
+      (expiresAt != null && !isExpiredTime(expiresAt))
+    ) {
       await this.updateByUserId(userId, {
         verificationCode: null,
         expiresAt: null,

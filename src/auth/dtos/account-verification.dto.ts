@@ -1,4 +1,4 @@
 export class AccountVerificationDto {
-  verificationCode: string;
-  expiresAt: Date;
+  verificationCode: string | null;
+  expiresAt: Date | null;
 }

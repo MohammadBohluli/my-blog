@@ -1,11 +1,9 @@
 import {
-  IsEmail,
   IsOptional,
   IsString,
   MaxLength,
   MinLength,
   NotContains,
-  NotEquals,
 } from 'class-validator';
 
 export class UpdateUserDto {

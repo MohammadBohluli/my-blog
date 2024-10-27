@@ -77,7 +77,10 @@ export class ResetPasswordService {
 
     const { resetToken: token, expiresAt } = await this.findByUserId(userId);
 
-    if (token != resetToken || !isExpiredTime(expiresAt)) {
+    if (
+      token != resetToken ||
+      (expiresAt != null && !isExpiredTime(expiresAt))
+    ) {
       await this.updateByUserId(userId, {
         resetToken: null,
         expiresAt: null,

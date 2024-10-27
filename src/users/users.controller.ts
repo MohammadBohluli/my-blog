@@ -1,21 +1,12 @@
-import {
-  Body,
-  Controller,
-  Get,
-  Patch,
-  Post,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
+import { User } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
+import { CurrentUser } from 'src/auth/types/current-user.type';
 import { Serializer } from 'src/common/interceptors/serialize.interceptor';
+import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
-import { UpdateUserDto } from './dtos/update-user.dto';
-import { CurrentUser } from 'src/auth/types/current-user.type';
-import { User } from 'src/auth/decorators/current-user.decorator';
 
 @ApiTags('users')
 @Controller('users')
@@ -25,8 +16,8 @@ export class UsersController {
   @Serializer(UserDto)
   @UseGuards(JwtAuthGuard)
   @Get('profile')
-  getProfile(@Req() req: Request) {
-    return this.userService.findById(req.user.userId);
+  getProfile(@User() user: CurrentUser) {
+    return this.userService.findById(user.userId);
   }
 
   @UseGuards(JwtAuthGuard)
