@@ -16,6 +16,7 @@ import {
   ApiSignInSwagger,
   ApiSignOutSwagger,
   ApiSignUpSwagger,
+  ApiVerifyAccountSwagger,
 } from './documents/auth.swagger';
 import { ChangePasswordDto } from './dtos/change-password.dto';
 import { ForgotPasswordDto } from './dtos/forgot-password.dto';
@@ -73,6 +74,7 @@ export class AuthController {
     return { accessToken, refreshToken };
   }
 
+  @ApiVerifyAccountSwagger()
   @ResponsMessage('your account successfully verified')
   @Post('verify-account/:userId/:verificationCode')
   @HttpCode(HttpStatus.OK)

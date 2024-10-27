@@ -59,7 +59,7 @@ export class AuthService {
     if (!user.isActive) {
       await this.verificationService.sendVerificationCode(user);
       throw new UnauthorizedException(
-        'your account not active, activation code send to email',
+        'Your account is not active. An activation code has been sent to your email.',
       );
     }
 

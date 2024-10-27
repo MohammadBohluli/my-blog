@@ -3,8 +3,10 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiHeaders,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
 } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { SigninDto } from '../dtos/signin.dto';
@@ -75,37 +77,49 @@ export const ApiSignOutSwagger = () => {
   );
 };
 
-export const ApiRefreshTokenSwagger = () => {
-  return applyDecorators(
-    ApiBearerAuth(),
-    ApiOperation({
-      summary: '',
-      description: '',
-    }),
-    ApiOkResponse({
-      type: '',
-      description: '',
-    }),
-  );
-};
+// export const ApiRefreshTokenSwagger = () => {
+//   return applyDecorators(
+//     ApiBearerAuth(),
+//     ApiOperation({
+//       summary: '',
+//       description: '',
+//     }),
+//     ApiOkResponse({
+//       type: '',
+//       description: '',
+//     }),
+//   );
+// };
 
 export const ApiVerifyAccountSwagger = () => {
   return applyDecorators(
-    ApiBearerAuth(),
     ApiOperation({
-      summary: '',
-      description: '',
+      summary: 'Account Verification',
+      description: `Verifies a user's account using the provided user ID and verification code. 
+      This endpoint ensures that the user's email has been validated and that they can access 
+      the system securely.`,
     }),
     ApiOkResponse({
-      type: '',
-      description: '',
+      description: `Account verified successfully. The user can now access their account.`,
+    }),
+    ApiParam({
+      name: 'userId',
+      required: true,
+      description:
+        'The unique identifier of the user whose account is being verified.',
+      type: Number,
+    }),
+    ApiParam({
+      name: 'verificationCode',
+      required: true,
+      description: `The verification code sent to the user’s email for account validation.`,
+      type: String,
     }),
   );
 };
 
 export const ApiForgotPasswordSwagger = () => {
   return applyDecorators(
-    ApiBearerAuth(),
     ApiOperation({
       summary: '',
       description: '',
@@ -119,7 +133,6 @@ export const ApiForgotPasswordSwagger = () => {
 
 export const ApiResetPasswordSwagger = () => {
   return applyDecorators(
-    ApiBearerAuth(),
     ApiOperation({
       summary: '',
       description: '',
