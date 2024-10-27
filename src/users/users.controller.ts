@@ -7,12 +7,17 @@ import { Serializer } from 'src/common/interceptors/serialize.interceptor';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { UserDto } from './dtos/user.dto';
 import { UsersService } from './users.service';
+import {
+  ApiGetProfileSwagger,
+  ApiUpdateUserSwagger,
+} from './documents/users.swagger';
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
+  @ApiGetProfileSwagger()
   @Serializer(UserDto)
   @UseGuards(JwtAuthGuard)
   @Get('profile')
@@ -20,6 +25,7 @@ export class UsersController {
     return this.userService.findById(user.userId);
   }
 
+  @ApiUpdateUserSwagger()
   @UseGuards(JwtAuthGuard)
   @Patch('profile')
   async updateUser(@Body() body: UpdateUserDto, @User() user: CurrentUser) {

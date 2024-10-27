@@ -30,7 +30,7 @@ export class CreateUserDto {
   @IsString()
   @MinLength(3)
   @MaxLength(30)
-  @NotContains(' ', { message: 'username should not contain a space' })
+  @NotContains(' ', { message: 'username should not contain space' })
   username: string;
 
   @ApiProperty({
@@ -38,6 +38,7 @@ export class CreateUserDto {
     type: String,
     minLength: 3,
     maxLength: 30,
+    nullable: true,
     example: 'my name',
   })
   @IsString()

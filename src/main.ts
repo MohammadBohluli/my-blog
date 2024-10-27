@@ -4,9 +4,12 @@ import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { CustomResponse } from './common/dtos/custom-response.dto';
 import { PrismaClientExceptionFilter } from './common/exceptions/prisma-client-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 
+// just for show document
+class Response<T> extends CustomResponse<T> {}
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const configService = app.get(ConfigService);
@@ -19,12 +22,15 @@ async function bootstrap() {
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   const config = new DocumentBuilder()
+    .addBearerAuth({ type: 'http' })
     .setTitle('My Blog API')
     .setDescription('This project is a personal blog api')
     .setVersion('1.0')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
+  const document = SwaggerModule.createDocument(app, config, {
+    extraModels: [Response],
+  });
   SwaggerModule.setup('api', app, document);
 
   await app.listen(PORT);
