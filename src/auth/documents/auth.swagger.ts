@@ -3,6 +3,8 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
+  ApiHeader,
+  ApiHeaders,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -78,19 +80,19 @@ export const ApiSignOutSwagger = () => {
   );
 };
 
-// export const ApiRefreshTokenSwagger = () => {
-//   return applyDecorators(
-//     ApiBearerAuth(),
-//     ApiOperation({
-//       summary: '',
-//       description: '',
-//     }),
-//     ApiOkResponse({
-//       type: '',
-//       description: '',
-//     }),
-//   );
-// };
+export const ApiRefreshTokenSwagger = () => {
+  return applyDecorators(
+    ApiBearerAuth(),
+    ApiOperation({
+      summary: 'Refresh the Access Token',
+      description: `Allows users to obtain a new access token using a valid refresh token.
+                    The refresh token should be provided in the Authorization header as Bearer <refresh_token>.`,
+    }),
+    ApiOkResponse({
+      description: `Returns a new access and refresh token.`,
+    }),
+  );
+};
 
 export const ApiVerifyAccountSwagger = () => {
   return applyDecorators(

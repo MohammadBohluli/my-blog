@@ -15,6 +15,7 @@ import { User } from './decorators/current-user.decorator';
 import {
   ApiChangePasswordSwagger,
   ApiForgotPasswordSwagger,
+  ApiRefreshTokenSwagger,
   ApiResetPasswordSwagger,
   ApiSignInSwagger,
   ApiSignOutSwagger,
@@ -68,6 +69,7 @@ export class AuthController {
     this.authService.signout(user.userId);
   }
 
+  @ApiRefreshTokenSwagger()
   @UseGuards(RefreshAuthGuard)
   @Post('refresh')
   async refreshToken(@User() user: CurrentUser) {
