@@ -13,6 +13,9 @@ import { ResponsMessage } from 'src/common/decorators/response-message.decorator
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
 import { User } from './decorators/current-user.decorator';
 import {
+  ApiChangePasswordSwagger,
+  ApiForgotPasswordSwagger,
+  ApiResetPasswordSwagger,
   ApiSignInSwagger,
   ApiSignOutSwagger,
   ApiSignUpSwagger,
@@ -85,14 +88,16 @@ export class AuthController {
     await this.verificationdService.verifyAccount(userId, verificationCode);
   }
 
-  @ResponsMessage('reset password link send to email')
+  @ApiForgotPasswordSwagger()
+  @ResponsMessage('a reset password link has been sent to your email.')
   @Post('forgot-password')
   @HttpCode(HttpStatus.OK)
   async forgotPassword(@Body() body: ForgotPasswordDto) {
     await this.resetPasswordService.forgotPassword(body);
   }
 
-  @ResponsMessage('your password successfully changed')
+  @ApiResetPasswordSwagger()
+  @ResponsMessage('Your password has been successfully changed.')
   @Post('reset-password/:userId/:resetToken')
   @HttpCode(HttpStatus.OK)
   async resetPassword(
@@ -103,7 +108,8 @@ export class AuthController {
     await this.resetPasswordService.resetPassword(userId, resetToken, body);
   }
 
-  @ResponsMessage('your password successfully changed')
+  @ApiChangePasswordSwagger()
+  @ResponsMessage('Your password has been successfully changed.')
   @UseGuards(JwtAuthGuard)
   @Post('change-password')
   @HttpCode(HttpStatus.OK)

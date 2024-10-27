@@ -3,12 +3,13 @@ import {
   ApiBearerAuth,
   ApiBody,
   ApiCreatedResponse,
-  ApiHeaders,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
 } from '@nestjs/swagger';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
+import { ChangePasswordDto } from '../dtos/change-password.dto';
+import { ForgotPasswordDto } from '../dtos/forgot-password.dto';
 import { SigninDto } from '../dtos/signin.dto';
 
 export const ApiSignUpSwagger = () => {
@@ -121,12 +122,17 @@ export const ApiVerifyAccountSwagger = () => {
 export const ApiForgotPasswordSwagger = () => {
   return applyDecorators(
     ApiOperation({
-      summary: '',
-      description: '',
+      summary: 'Forgot Password',
+      description: `Initiates the password recovery process by sending a password reset link 
+      to the user's registered email address. This endpoint requires the user to provide their 
+      email to receive the reset instructions.`,
     }),
     ApiOkResponse({
-      type: '',
-      description: '',
+      description: `A password reset link has been successfully sent to the provided email address.`,
+    }),
+    ApiBody({
+      type: ForgotPasswordDto,
+      description: `Object containing the user’s email address for password recovery.`,
     }),
   );
 };
@@ -134,12 +140,31 @@ export const ApiForgotPasswordSwagger = () => {
 export const ApiResetPasswordSwagger = () => {
   return applyDecorators(
     ApiOperation({
-      summary: '',
-      description: '',
+      summary: 'Reset Password',
+      description: `Initiates the process of resetting a user's password using a valid reset token. 
+      The user must provide their unique identifier, along with the new password and the reset token 
+      received via email. Upon successful reset, the user's password will be updated.`,
     }),
     ApiOkResponse({
-      type: '',
-      description: '',
+      description: 'Your password has been successfully changed.',
+    }),
+    ApiBody({
+      type: ForgotPasswordDto,
+      description: `An object containing the new password that the user wants to set. 
+      This is required to complete the password reset process.`,
+    }),
+    ApiParam({
+      name: 'userId',
+      required: true,
+      description:
+        'The unique identifier of the user whose account is being verified.',
+      type: Number,
+    }),
+    ApiParam({
+      name: 'resetToken',
+      required: true,
+      description: `The reset token sent to the user’s email for reset password.`,
+      type: String,
     }),
   );
 };
@@ -148,12 +173,16 @@ export const ApiChangePasswordSwagger = () => {
   return applyDecorators(
     ApiBearerAuth(),
     ApiOperation({
-      summary: '',
-      description: '',
+      summary: 'Change Password',
+      description: `Allows the authenticated user to change their password. 
+      The user must provide their current password along with the new password.`,
     }),
     ApiOkResponse({
-      type: '',
-      description: '',
+      description: 'Your password has been successfully changed.',
+    }),
+    ApiBody({
+      type: ChangePasswordDto,
+      description: `An object containing the new password.`,
     }),
   );
 };
