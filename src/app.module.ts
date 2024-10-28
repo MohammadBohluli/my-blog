@@ -4,7 +4,7 @@ import appConfig from 'config/app.config';
 import jwtRefreshConfig from 'config/jwt-refresh.config';
 import jwtConfig from 'config/jwt.config';
 import mailConfig from 'config/mail.config';
-import { ArticlesModule } from './articles/articles.module';
+import { ArticlesModule } from './articles/module/articles.module';
 import { AuthModule } from './auth/auth.module';
 import { CategoriesModule } from './categories/module/categories.module';
 import { MailModule } from './mail/mail.module';
