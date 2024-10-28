@@ -37,16 +37,28 @@ model User {
 }
 
 model Article {
-  id        Int      @id() @default(autoincrement())
-  title     String
-  body      String
-  status    Status   @default(DRAFT)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  Int
+  id         Int        @id() @default(autoincrement())
+  title      String
+  Slug       String     @unique
+  body       String
+  status     Status     @default(DRAFT)
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  author     User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   Int
+  categories Category[]
 
   @@map("articles")
+}
+
+model Category {
+  id        Int       @id() @default(autoincrement())
+  name      String    @unique
+  articles  Article[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("categories")
 }
 
 model AccountVerification {
