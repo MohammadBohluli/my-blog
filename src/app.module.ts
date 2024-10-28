@@ -6,6 +6,7 @@ import jwtConfig from 'config/jwt.config';
 import mailConfig from 'config/mail.config';
 import { ArticlesModule } from './articles/articles.module';
 import { AuthModule } from './auth/auth.module';
+import { CategoriesModule } from './categories/module/categories.module';
 import { MailModule } from './mail/mail.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { UsersModule } from './users/users.module';
@@ -23,6 +24,7 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     UsersModule,
     MailModule,
+    CategoriesModule,
   ],
 })
 export class AppModule {}
