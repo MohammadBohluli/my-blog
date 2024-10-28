@@ -14,14 +14,14 @@ export class CategoriesService {
   async findById(categoryId: number) {
     return await this.prisma.category.findUnique({
       where: { id: categoryId },
-      select: { id: true, name: true },
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
     });
   }
 
   async findByName(categoryName: string) {
     return await this.prisma.category.findUnique({
       where: { name: categoryName },
-      select: { id: true, name: true },
+      select: { id: true, name: true, createdAt: true, updatedAt: true },
     });
   }
 
