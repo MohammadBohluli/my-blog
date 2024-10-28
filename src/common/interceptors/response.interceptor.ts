@@ -8,8 +8,8 @@ import { Reflector } from '@nestjs/core';
 import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CustomResponse } from 'src/types/custom-response.type';
 import { RESPONSE_MESSAGE_METADATA } from '../decorators/response-message.decorator';
+import { CustomResponse } from '../dtos/custom-response.dto';
 
 @Injectable()
 export class ResponseInterceptor<T>
