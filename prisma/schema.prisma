@@ -39,7 +39,7 @@ model User {
 model Article {
   id         Int        @id() @default(autoincrement())
   title      String
-  Slug       String     @unique
+  slug       String     @unique
   body       String
   status     Status     @default(DRAFT)
   createdAt  DateTime   @default(now())

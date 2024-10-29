@@ -7,5 +7,6 @@ import { CategoriesService } from '../services/categories.service';
   imports: [PrismaModule],
   controllers: [CategoriesController],
   providers: [CategoriesService],
+  exports: [CategoriesService],
 })
 export class CategoriesModule {}
