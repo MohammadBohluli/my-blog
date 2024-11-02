@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { PaginationDto } from './pagination.dto';
 
 export class CustomResponse<T> {
   @ApiProperty({
@@ -42,5 +43,6 @@ export class CustomResponse<T> {
     type: Date,
     required: false,
   })
+  pagination?: PaginationDto;
   timestamp: Date;
 }

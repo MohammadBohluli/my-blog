@@ -1,6 +1,11 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { CategoriesService } from 'src/categories/services/categories.service';
+import {
+  Order,
+  PaginationOptionDto,
+} from 'src/common/dtos/pagiantion-option.dto';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { slugify } from 'src/common/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticleDto } from '../dtos/create-article.dto';
@@ -23,10 +28,25 @@ export class ArticlesService {
     return article;
   }
 
-  async findAll() {
-    return await this.prisma.article.findMany({
+  async findAll(query: PaginationOptionDto) {
+    const { limit, page, order } = query;
+
+    const orderBy = order ? order : Order.DESC;
+
+    const articles = await this.prisma.article.findMany({
+      where: { status: Status.PUBLISHED },
+      orderBy: { updatedAt: orderBy },
+      take: limit,
+      skip: (page - 1) * limit,
+    });
+
+    const totalCount = await this.prisma.article.count({
       where: { status: Status.PUBLISHED },
     });
+
+    const pagination = new PaginationDto({ limit, page }, totalCount);
+
+    return { articles, pagination };
   }
 
   async create(userId: number, createArticleDto: CreateArticleDto) {

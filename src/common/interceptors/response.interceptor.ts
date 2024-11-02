@@ -22,10 +22,12 @@ export class ResponseInterceptor<T>
   ): Observable<CustomResponse<T>> {
     return next
       .handle()
-      .pipe(map((data: unknown) => this.responseHandler(data, ctx)));
+      .pipe(map((data: CustomResponse<T>) => this.responseHandler(data, ctx)));
   }
 
   responseHandler(data: any, ctx: ExecutionContext) {
+    const { pagination, ...otherData } = data;
+
     const req = ctx.switchToHttp().getRequest<Request>();
     const res = ctx.switchToHttp().getResponse<Response>();
     const statusCode = res.statusCode;
@@ -39,7 +41,8 @@ export class ResponseInterceptor<T>
       path: req.url,
       statusCode,
       message,
-      data,
+      data: otherData,
+      ...(pagination && { pagination }),
       timestamp,
     };
   }

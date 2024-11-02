@@ -7,24 +7,26 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { User } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/types/current-user.type';
+import { ResponsMessage } from 'src/common/decorators/response-message.decorator';
+import { PaginationOptionDto } from 'src/common/dtos/pagiantion-option.dto';
 import { CreateArticleDto } from '../dtos/create-article.dto';
 import { UpdateArticleDto } from '../dtos/update-article.dto';
 import { IsAuthorOrAdminGuard } from '../guards/is-owner-or-admin/is-author-or-admin.guard';
 import { ArticlesService } from '../services/articles.service';
-import { ResponsMessage } from 'src/common/decorators/response-message.decorator';
 
 @Controller('articles')
 export class ArticlesController {
   constructor(private readonly articleService: ArticlesService) {}
 
-  @Get('/')
-  findAll() {
-    return this.articleService.findAll();
+  @Get()
+  async findAll(@Query() query: PaginationOptionDto) {
+    return await this.articleService.findAll(query);
   }
 
   @Get(':articleId')

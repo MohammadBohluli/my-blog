@@ -16,7 +16,13 @@ async function bootstrap() {
 
   const { httpAdapter } = app.get(HttpAdapterHost);
 
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
   app.useGlobalInterceptors(new ResponseInterceptor(new Reflector()));
   app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
