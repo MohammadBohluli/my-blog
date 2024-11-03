@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { Status } from '@prisma/client';
 import { CategoriesService } from 'src/categories/services/categories.service';
 import {
@@ -8,6 +12,7 @@ import {
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { slugify } from 'src/common/utils';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { ArticleCategoryDto } from '../dtos/article-category.dto';
 import { CreateArticleDto } from '../dtos/create-article.dto';
 import { UpdateArticleDto } from '../dtos/update-article.dto';
 
@@ -21,6 +26,10 @@ export class ArticlesService {
   async findById(articleId: number) {
     const article = await this.prisma.article.findUnique({
       where: { id: articleId },
+      include: {
+        categories: { select: { id: true, name: true } },
+        author: true,
+      },
     });
 
     if (!article) throw new NotFoundException('article not found');
@@ -55,7 +64,7 @@ export class ArticlesService {
     const validatedCategories =
       await this.categoryService.validateCategories(categories);
 
-    await this.prisma.article.create({
+    return await this.prisma.article.create({
       data: {
         authorId: userId,
         status,
@@ -66,30 +75,69 @@ export class ArticlesService {
           connect: validatedCategories.map(({ id }) => ({ id })),
         },
       },
+      include: { categories: true, author: true },
     });
   }
 
   async update(articleId: number, updateArticleDto: UpdateArticleDto) {
-    const { body, categories, title, status } = updateArticleDto;
+    const { body, title, status } = updateArticleDto;
 
-    const validatedCategories = categories
-      ? await this.categoryService.validateCategories(categories)
-      : [];
-
-    await this.prisma.article.update({
+    return await this.prisma.article.update({
       where: { id: articleId },
       data: {
         body,
         status,
         title,
         slug: title ? slugify(title) : undefined,
-        categories: { connect: validatedCategories.map(({ id }) => ({ id })) },
       },
+      include: { categories: true, author: true },
     });
   }
 
   async delete(articleId: number) {
     await this.findById(articleId);
     await this.prisma.article.delete({ where: { id: articleId } });
+  }
+
+  async deleteArticleCategory(articleCategoryDto: ArticleCategoryDto) {
+    const { articleId, categoryId } = articleCategoryDto;
+
+    const article = await this.findById(articleId);
+    const category = await this.categoryService.findById(categoryId);
+    if (!category) throw new NotFoundException('category not found');
+
+    const categoriesId = article.categories.map((cat) => cat.id);
+    if (!categoriesId.includes(categoryId)) {
+      throw new NotFoundException(
+        'The specified category is not associated with this article',
+      );
+    }
+
+    if (
+      article.categories.length === 1 &&
+      article.categories[0].id === categoryId
+    ) {
+      throw new BadRequestException(
+        'An article must have at least one category.',
+      );
+    }
+
+    await this.prisma.article.update({
+      where: { id: articleId },
+      data: { categories: { disconnect: { id: categoryId } } },
+    });
+  }
+
+  async updateArticleCategory(articleCategoryDto: ArticleCategoryDto) {
+    const { articleId, categoryId } = articleCategoryDto;
+
+    await this.findById(articleId);
+    const category = await this.categoryService.findById(categoryId);
+    if (!category) throw new NotFoundException('category not found');
+
+    await this.prisma.article.update({
+      where: { id: articleId },
+      data: { categories: { connect: { id: categoryId } } },
+    });
   }
 }

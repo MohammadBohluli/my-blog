@@ -7,6 +7,7 @@ import { AppModule } from './app.module';
 import { CustomResponse } from './common/dtos/custom-response.dto';
 import { PrismaClientExceptionFilter } from './common/exceptions/prisma-client-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
+import { PaginationDto } from './common/dtos/pagination.dto';
 
 class Response<T> extends CustomResponse<T> {} // just for display document
 async function bootstrap() {

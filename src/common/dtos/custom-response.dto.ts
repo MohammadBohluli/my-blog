@@ -43,6 +43,12 @@ export class CustomResponse<T> {
     type: Date,
     required: false,
   })
-  pagination?: PaginationDto;
   timestamp: Date;
+
+  @ApiProperty({
+    description: '',
+    type: PaginationDto,
+    required: false,
+  })
+  pagination?: PaginationDto;
 }

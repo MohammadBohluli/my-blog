@@ -15,18 +15,4 @@ export class CategoryDto {
   })
   @Expose()
   name: string;
-
-  @ApiProperty({
-    type: Date,
-    required: false,
-  })
-  @Expose()
-  createdAt: Date;
-
-  @ApiProperty({
-    type: Date,
-    required: false,
-  })
-  @Expose()
-  updatedAt: Date;
 }

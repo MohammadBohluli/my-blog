@@ -26,7 +26,7 @@ export class ResponseInterceptor<T>
   }
 
   responseHandler(data: any, ctx: ExecutionContext) {
-    const { pagination, ...otherData } = data;
+    const { pagination, ...otherData } = data || {};
 
     const req = ctx.switchToHttp().getRequest<Request>();
     const res = ctx.switchToHttp().getResponse<Response>();
