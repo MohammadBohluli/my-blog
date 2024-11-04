@@ -42,3 +42,18 @@ export const ApiUpdateUserSwagger = () => {
     }),
   );
 };
+
+export const ApiDeleteProfileSwagger = () => {
+  return applyDecorators(
+    ApiBearerAuth(),
+    ApiOperation({
+      summary: 'Delete User Profile',
+      description:
+        'Completely deletes the user profile along with all articles.',
+    }),
+    ApiOkResponse({
+      description:
+        'The user profile and associated articles have been successfully deleted.',
+    }),
+  );
+};

@@ -12,6 +12,7 @@ import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/types/current-user.type';
 import { Serializer } from 'src/common/interceptors/serialize.interceptor';
 import {
+  ApiDeleteProfileSwagger,
   ApiGetProfileSwagger,
   ApiUpdateUserSwagger,
 } from '../documents/users.swagger';
@@ -39,6 +40,7 @@ export class UsersController {
     return await this.userService.update(user.userId, body);
   }
 
+  @ApiDeleteProfileSwagger()
   @UseGuards(JwtAuthGuard)
   @Delete('profile')
   async deleteUser(@User() user: CurrentUser) {
