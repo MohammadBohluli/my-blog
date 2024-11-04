@@ -4,8 +4,8 @@ import { ResetPasswordDto } from 'src/auth/dtos/reset-password.dto';
 import { generateExpireTime, generateRandomCode } from 'src/common/utils';
 import { MailService } from 'src/mail/mail.service';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateUserDto } from './dtos/create-user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
+import { CreateUserDto } from '../dtos/create-user.dto';
+import { UpdateUserDto } from '../dtos/update-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -96,9 +96,11 @@ export class UsersService {
       if (user) throw new ConflictException(`the ${username} already exists`);
     }
 
-    await this.prisma.user.update({
+    const user = await this.prisma.user.update({
       where: { id: userId },
       data: { name, username },
     });
+
+    return user;
   }
 }

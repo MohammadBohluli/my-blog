@@ -11,7 +11,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { ResponsMessage } from 'src/common/decorators/response-message.decorator';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
-import { User } from './decorators/current-user.decorator';
+import { User } from '../decorators/current-user.decorator';
 import {
   ApiChangePasswordSwagger,
   ApiForgotPasswordSwagger,
@@ -21,16 +21,16 @@ import {
   ApiSignOutSwagger,
   ApiSignUpSwagger,
   ApiVerifyAccountSwagger,
-} from './documents/auth.swagger';
-import { ChangePasswordDto } from './dtos/change-password.dto';
-import { ForgotPasswordDto } from './dtos/forgot-password.dto';
-import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
-import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
-import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
-import { AuthService } from './services/authentication/auth.service';
-import { ResetPasswordService } from './services/reset-password/reset-password.service';
-import { VerificationService } from './services/verification/verification.service';
-import { CurrentUser } from './types/current-user.type';
+} from '../documents/auth.swagger';
+import { ChangePasswordDto } from '../dtos/change-password.dto';
+import { ForgotPasswordDto } from '../dtos/forgot-password.dto';
+import { JwtAuthGuard } from '../guards/jwt-auth/jwt-auth.guard';
+import { LocalAuthGuard } from '../guards/local-auth/local-auth.guard';
+import { RefreshAuthGuard } from '../guards/refresh-auth/refresh-auth.guard';
+import { AuthService } from '../services/authentication/auth.service';
+import { ResetPasswordService } from '../services/reset-password/reset-password.service';
+import { VerificationService } from '../services/verification/verification.service';
+import { CurrentUser } from '../types/current-user.type';
 
 @ApiTags('auth')
 @Controller('auth')

@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import * as argon2 from 'argon2';
 import { CreateUserDto } from 'src/users/dtos/create-user.dto';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from 'src/users/services/users.service';
 import { SigninDto } from '../../dtos/signin.dto';
 import { CurrentUser } from '../../types/current-user.type';
 import { AuthJwtPayload } from '../../types/jwt-payload.type';

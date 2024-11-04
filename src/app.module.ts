@@ -1,15 +1,15 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import appConfig from 'config/app.config';
-import jwtRefreshConfig from 'config/jwt-refresh.config';
-import jwtConfig from 'config/jwt.config';
-import mailConfig from 'config/mail.config';
+import appConfig from 'src/config/app.config';
+import jwtRefreshConfig from 'src/config/jwt-refresh.config';
+import jwtConfig from 'src/config/jwt.config';
+import mailConfig from 'src/config/mail.config';
 import { ArticlesModule } from './articles/module/articles.module';
-import { AuthModule } from './auth/auth.module';
+import { AuthModule } from './auth/module/auth.module';
 import { CategoriesModule } from './categories/module/categories.module';
 import { MailModule } from './mail/mail.module';
 import { PrismaModule } from './prisma/prisma.module';
-import { UsersModule } from './users/users.module';
+import { UsersModule } from './users/module/users.module';
 
 @Module({
   imports: [

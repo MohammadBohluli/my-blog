@@ -4,21 +4,21 @@ import { User } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
 import { CurrentUser } from 'src/auth/types/current-user.type';
 import { Serializer } from 'src/common/interceptors/serialize.interceptor';
-import { UpdateUserDto } from './dtos/update-user.dto';
-import { UserDto } from './dtos/user.dto';
-import { UsersService } from './users.service';
 import {
   ApiGetProfileSwagger,
   ApiUpdateUserSwagger,
-} from './documents/users.swagger';
+} from '../documents/users.swagger';
+import { UpdateUserDto } from '../dtos/update-user.dto';
+import { UserDto } from '../dtos/user.dto';
+import { UsersService } from '../services/users.service';
 
+@Serializer(UserDto)
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UsersService) {}
 
   @ApiGetProfileSwagger()
-  @Serializer(UserDto)
   @UseGuards(JwtAuthGuard)
   @Get('profile')
   getProfile(@User() user: CurrentUser) {
@@ -29,6 +29,6 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @Patch('profile')
   async updateUser(@Body() body: UpdateUserDto, @User() user: CurrentUser) {
-    await this.userService.update(user.userId, body);
+    return await this.userService.update(user.userId, body);
   }
 }
