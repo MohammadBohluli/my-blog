@@ -65,7 +65,7 @@ model AccountVerification {
   id               Int       @id() @default(autoincrement())
   verificationCode String?
   expiresAt        DateTime?
-  user             User      @relation(fields: [userId], references: [id])
+  user             User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId           Int       @unique
 
   @@map("account_verification")
@@ -75,7 +75,7 @@ model ResetPassword {
   id         Int       @id() @default(autoincrement())
   resetToken String?
   expiresAt  DateTime?
-  user       User      @relation(fields: [userId], references: [id])
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int       @unique
 
   @@map("reset_password")

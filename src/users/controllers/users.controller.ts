@@ -1,4 +1,11 @@
-import { Body, Controller, Get, Patch, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Patch,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { User } from 'src/auth/decorators/current-user.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth/jwt-auth.guard';
@@ -30,5 +37,11 @@ export class UsersController {
   @Patch('profile')
   async updateUser(@Body() body: UpdateUserDto, @User() user: CurrentUser) {
     return await this.userService.update(user.userId, body);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('profile')
+  async deleteUser(@User() user: CurrentUser) {
+    await this.userService.delete(user.userId);
   }
 }

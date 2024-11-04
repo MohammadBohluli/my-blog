@@ -103,4 +103,14 @@ export class UsersService {
 
     return user;
   }
+
+  async delete(userId: number) {
+    await this.prisma.user.delete({
+      where: { id: userId },
+      include: {
+        accountVerification: true,
+        resetPassword: true,
+      },
+    });
+  }
 }
