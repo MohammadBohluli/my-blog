@@ -69,6 +69,14 @@ export class CategoriesService {
   async deleteById(categoryId: number) {
     await this.ensureCategoryExistsById(categoryId);
 
+    const isUsed = await this.isCategoryUsedByOtherArticle(categoryId);
+
+    if (isUsed) {
+      throw new BadRequestException(
+        'this category not been deleted becuase other article use this category',
+      );
+    }
+
     await this.prisma.category.delete({ where: { id: categoryId } });
   }
 
@@ -99,5 +107,15 @@ export class CategoriesService {
     }
 
     return existingCategories;
+  }
+
+  async isCategoryUsedByOtherArticle(categoryId: number) {
+    const article = await this.prisma.article.findFirst({
+      where: { categories: { some: { id: categoryId } } },
+    });
+
+    if (article) return true;
+
+    return false;
   }
 }
