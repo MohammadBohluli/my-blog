@@ -31,7 +31,10 @@ export const ApiUpdateUserSwagger = () => {
       description:
         'Updates the user profile information. Each field is optional.',
     }),
-    ApiOkResponse({ description: 'User profile updated successfully.' }),
+    ApiOkResponse({
+      type: UserDto,
+      description: 'User profile updated successfully.',
+    }),
     ApiBody({
       type: UpdateUserDto,
       description: 'Fields to update. All fields are optional.',

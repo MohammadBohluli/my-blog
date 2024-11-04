@@ -41,9 +41,9 @@ export class ResponseInterceptor<T>
       path: req.url,
       statusCode,
       message,
+      timestamp,
       data: otherData,
       ...(pagination && { pagination }),
-      timestamp,
     };
   }
 }
